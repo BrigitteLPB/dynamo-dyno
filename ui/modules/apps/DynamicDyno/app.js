@@ -48,6 +48,10 @@ angular.module('beamng.apps')
         restrict: 'EA',
         controller: ['$scope', function ($scope) {
           // settings default values
+          $scope.vehicle = {
+            id: 0,
+            engineNames: []
+          };
           $scope.engine = {
             rpm: {
               idle: 0,
@@ -82,24 +86,46 @@ angular.module('beamng.apps')
 
 
           scope.$on('TorqueCurveChanged', function (_, data) {
-            setTimeout(function () {
-              scope.engine.rpm.max = data.maxRPM;
-              scope.engine.torque.max = data.maxTorque;
-              scope.engine.power.hp.max = data.maxPower;
-              scope.engine.power.watt.max = data.maxPower * 736;
-            }, 0)
+              if (data.vehicleID !== scope.vehicle.id) {
+                scope.vehicle.id = data.vehicleID;
+                scope.vehicle.engineNames = [{name: data.deviceName}];
 
-          })
+                scope.engine.rpm.max = data.maxRPM;
+                scope.engine.torque.max = data.maxTorque;
+                scope.engine.power.hp.max = data.maxPower;
+                scope.engine.power.watt.max = data.maxPower * 736;
+              } else {
+                // check if we already have this engine
+                if (!scope.vehicle.engineNames.find(engine => engine.name === data.deviceName)) {
+                  scope.vehicle.engineNames.push({name: data.deviceName});
+
+                  scope.engine.rpm.max = Math.max(scope.engine.rpm.max, data.maxRPM);
+                  scope.engine.torque.max += data.maxTorque;
+                  scope.engine.power.hp.max += data.maxPower;
+                  scope.engine.power.watt.max += data.maxPower * 736;
+
+                }
+              }
+
+              // console.log(JSON.stringify(data));  // DEBUG
+              // console.log(JSON.stringify(scope.engine));  // DEBUG
+              // console.log(JSON.stringify(scope.vehicle));  // DEBUG
+          });
 
 
           scope.$on('streamsUpdate', function (event, streams) {
             const ENGINE_SPEED_INDEX = 4;
             const ENGINE_TORQUE_INDEX = 8;
 
-            scope.engine.rpm.current = streams.electrics.rpmTacho;
-            scope.engine.torque.current = streams.powertrainDeviceData.devices.mainEngine.outputTorque[0];
+
+            scope.engine.rpm.current = streams.engineInfo[ENGINE_SPEED_INDEX];
+            scope.engine.torque.current = streams.engineInfo[ENGINE_TORQUE_INDEX];
             scope.engine.power.watt.current = (2 * Math.PI * scope.engine.rpm.current * scope.engine.torque.current) / 60;
             scope.engine.power.hp.current = scope.engine.power.watt.current / 736;
+
+
+            // console.log(JSON.stringify(streams));  // DEBUG
+            // console.log(JSON.stringify(scope.engine));  // DEBUG
           })
         }
       }
