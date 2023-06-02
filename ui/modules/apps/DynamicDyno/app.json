@@ -1,0 +1,20 @@
+{
+  "domElement": "<dynamic-dyno></dynamic-dyno>",
+  "name": "ui.apps.dynamicdyno.name",
+  "types": [
+    "ui.apps.categories.vehicle_info",
+    "ui.apps.categories.vehicle_profiling"
+  ],
+  "description": "Shows torque, rpm and power (hp/W) in realtime",
+  "css": {
+    "bottom": "0px",
+    "top": "0px",
+    "width": "500px",
+    "height": "200px",
+    "min-width": "200px",
+    "min-height": "150px"
+  },
+  "author": "BrigitteLPB",
+  "version": "0.1",
+  "directive": "dynamicDyno"
+}
