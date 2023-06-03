@@ -4,48 +4,50 @@ angular.module('beamng.apps')
       return {
         template: `
           <svg
-              width="100%"
-              height="100%"
-              viewBox="0 0 79.374799 31.749998"
-              version="1.1"
-              id="svg5"
-              inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
-              sodipodi:docname="dynamic-dyno.svg"
-              inkscape:export-filename="dynamic-dyno.svg"
-              inkscape:export-xdpi="25.4"
-              inkscape:export-ydpi="25.4"
-              xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-              xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:svg="http://www.w3.org/2000/svg">
+            width="100%"
+            height="100%"
+            viewBox="0 0 400 160"
+            version="1.1"
+            id="svg5"
+            inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+            sodipodi:docname="dynamic-dyno.svg"
+            inkscape:export-xdpi="25.4"
+            inkscape:export-ydpi="25.4"
+            xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+            xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:svg="http://www.w3.org/2000/svg">
             <sodipodi:namedview
                 id="namedview7"
                 pagecolor="#505050"
                 bordercolor="#eeeeee"
                 borderopacity="1"
-                inkscape:showpageshadow="0"
+                inkscape:showpageshadow="false"
                 inkscape:pageopacity="0"
-                inkscape:pagecheckerboard="0"
+                inkscape:pagecheckerboard="false"
                 inkscape:deskcolor="#505050"
-                inkscape:document-units="mm"
+                inkscape:document-units="px"
                 showgrid="true"
-                inkscape:zoom="5.6568542"
-                inkscape:cx="148.84598"
-                inkscape:cy="69.826795"
+                inkscape:zoom="2.56"
+                inkscape:cx="237.5"
+                inkscape:cy="-9.1796875"
                 inkscape:window-width="2560"
                 inkscape:window-height="1361"
                 inkscape:window-x="-9"
                 inkscape:window-y="-9"
                 inkscape:window-maximized="1"
-                inkscape:current-layer="layer1"
-                inkscape:lockguides="false">
+                inkscape:current-layer="layer4"
+                inkscape:lockguides="false"
+                showborder="true"
+                borderlayer="true"
+                shape-rendering="auto">
               <inkscape:grid
                   type="xygrid"
                   id="grid553"
                   empspacing="10"
-                  spacingx="0.26458333"
-                  originx="104.99677"
-                  originy="148.50009"
+                  spacingx="0.13333333"
+                  originx="0"
+                  originy="0"
                   enabled="true"
                   visible="true"
                   snapvisiblegridlinesonly="true" />
@@ -70,158 +72,161 @@ angular.module('beamng.apps')
                 inkscape:groupmode="layer"
                 id="layer1">
               <rect
-                  style="opacity:1;fill:#999999;fill-opacity:1;stroke-width:0.279816;image-rendering:auto"
+                  style="opacity:1;fill:#999999;fill-opacity:1;stroke-width:1.4101;image-rendering:auto"
                   id="rect1526"
-                  width="79.374992"
-                  height="31.749998"
-                  x="-9.7999997e-05"
-                  y="-31.749998"
+                  width="400"
+                  height="160"
+                  x="0"
+                  y="-160"
                   inkscape:label="rect1526"
                   transform="scale(1,-1)" />
               <text
                   xml:space="preserve"
-                  transform="matrix(0.32048449,0,0,0.35241066,-52.998051,-128.21345)"
+                  transform="matrix(0.40375996,0,0,0.44398196,251.56426,-10.528751)"
                   id="text115"
                   style="white-space:pre;shape-inside:url(#rect117);display:inline;fill:#000000"><tspan
                     x="168.32422"
                     y="377.10617"
-                    id="tspan2143">Dynamic Dyno - By BrigitteLPB</tspan></text>
+                    id="tspan2657">Dynamic Dyno - By BrigitteLPB</tspan></text>
               <g
                   inkscape:groupmode="layer"
                   id="layer2"
                   inkscape:label="Calque 2">
                 <text
                     xml:space="preserve"
-                    style="font-size:3.27522px;fill:#000000;stroke-width:0.272935"
-                    x="2.3258896"
-                    y="10.31875"
+                    style="font-size:20.6313px;fill:#000000;stroke-width:1.71928"
+                    x="12.985225"
+                    y="20.000002"
                     id="text123"><tspan
                       sodipodi:role="line"
                       id="tspan121"
-                      style="stroke-width:0.272935"
-                      x="2.3258896"
-                      y="10.31875">RPM:     {{ engine.rpm.current | number : '0' }}</tspan></text>
+                      style="stroke-width:1.71928"
+                      x="12.985225"
+                      y="20.000002">RPM:     {{ engine.rpm.current | number: 0 }}</tspan></text>
                 <text
                     xml:space="preserve"
-                    style="font-size:2.03491px;fill:#000000;stroke-width:0.169576"
-                    x="3.3347297"
-                    y="13.758335"
+                    style="font-size:10.9871px;fill:#000000;stroke-width:0.915595"
+                    x="21.577261"
+                    y="34.999977"
                     id="text123-4"><tspan
                       sodipodi:role="line"
                       id="tspan121-9"
-                      style="stroke-width:0.169576"
-                      x="3.3347297"
-                      y="13.758335">└ MAX:     {{ engine.rpm.max | number : '0' }} RPM</tspan></text>
+                      style="stroke-width:0.915595"
+                      x="21.577261"
+                      y="34.999977">└ MAX:     {{ engine.rpm.max | number: 0 }}</tspan></text>
                 <foreignObject
-                  width="53"
-                  height="4"
-                  x="25"
-                  y="9"
-                  id="foreignObject123-1">
+                    id="foreignObject123-1"
+                    width="225.71086"
+                    height="17.921268"
+                    x="136.82736"
+                    y="26.796244">
                     <div layout="row" layout-align="space-between" xmlns="http://www.w3.org/1999/xhtml"  style="height: 100%;">
                       <div style="background-color:#b2b3b5; width: 95%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
-                        <div style="font-size: 6px; background-color:#555; width:{{ engine.rpm.current > 0 ? ( 100 * ( engine.rpm.current <= engine.rpm.max ? engine.rpm.current : engine.rpm.max ) / engine.rpm.max ) : 0}}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
+                      <div style="font-size: 6px; background-color:#555; width:{{ engine.rpm.current > 0 ? ( 100 * ( engine.rpm.current <= engine.rpm.max ? engine.rpm.current : engine.rpm.max ) / engine.rpm.max ) : 0}}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
                       </div>
                       <div style="background-color:#500; width: 5%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
-                        <div style="font-size: 6px; background-color:#F00; width:{{ engine.rpm.current > engine.rpm.max ? ( 100 * ( engine.rpm.current - engine.rpm.max ) / ( ( engine.rpm.max * 5 ) / 95 ) ) : 0}}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
+                      <div style="font-size: 6px; background-color:#F00; width:{{ engine.rpm.current > engine.rpm.max ? ( 100 * ( engine.rpm.current - engine.rpm.max ) / ( ( engine.rpm.max * 5 ) / 95 ) ) : 0}}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
                       </div>
                     </div>
-                  </foreignObject>
+                </foreignObject>
               </g>
               <g
                   inkscape:groupmode="layer"
                   id="layer3"
                   inkscape:label="Calque 3"
                   transform="translate(0,1.0583333)">
-                  <text
+
+                <text
                     xml:space="preserve"
-                    transform="matrix(0.25653867,0,0,0.28504294,-42.831087,-107.68867)"
+                    transform="matrix(1.1707319,0,0,1.300813,-188.58616,-503.40172)"
                     id="text125"
                     style="white-space:pre;shape-inside:url(#rect127);display:inline;fill:#000000"><tspan
-                    x="173.89648"
-                    y="437.57492"
-                    id="tspan2145">Torque (N.m):  {{ engine.torque.current | number : '0' }}</tspan></text>
-                  <text
-                      xml:space="preserve"
-                      style="font-size:2.03491px;fill:#000000;stroke-width:0.169576"
-                      x="3.3347297"
-                      y="20.637501"
-                      id="text123-4-3"><tspan
-                        sodipodi:role="line"
-                        id="tspan121-9-6"
-                        style="stroke-width:0.169576"
-                        x="3.3347297"
-                        y="20.637501">└ MAX:     {{ engine.torque.max | number : '0' }} N.m</tspan></text>
-                  <foreignObject
-                    width="53"
-                    height="3"
-                    x="25"
-                    y="20"
-                    id="foreignObject123-2">
+                      x="173.89648"
+                      y="437.57492"
+                      id="tspan2659">Torque (N.m):  {{ engine.torque.current | number: 0 }}</tspan></text>
+                <text
+                  xml:space="preserve"
+                  style="font-size:10.9871px;fill:#000000;stroke-width:0.915595"
+                  x="21.577261"
+                  y="83.941643"
+                  id="text123-4-3"><tspan
+                    sodipodi:role="line"
+                    id="tspan121-9-6"
+                    style="stroke-width:0.915595"
+                    x="21.577261"
+                    y="83.941643">└ MAX:     {{ engine.torque.max | number: 0 }} N.m</tspan></text>
+                <foreignObject
+                    id="foreignObject123-2"
+                    width="254.08855"
+                    height="13.173177"
+                    x="135.40018"
+                    y="78.124031">
                       <div layout="row" layout-align="space-between" xmlns="http://www.w3.org/1999/xhtml" style="height: 100%;">
-                        <div style="display:flex; justify-content:flex-end; background-color:#b2b3b5; width: 9%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
-                          <div style="font-size: 6px; background-color:#555; width:{{ engine.torque.current < 0 ? (100 * ( engine.torque.current >= -100 ? engine.torque.current : -100 ) / -100) : 0 }}%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
-                        </div>
-                        <div style="background-color:#555; height: 100%; width: 1%;" xmlns="http://www.w3.org/1999/xhtml">
-                        </div>
-                        <div style="background-color:#b2b3b5; width: 90%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
-                          <div style="font-size: 6px; background-color:#555; width:{{ engine.torque.current > 0 ? ( 100 * ( engine.torque.current <= engine.torque.max ? engine.torque.current : engine.torque.max ) / engine.torque.max ) : 0 }}%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
-                        </div>
+                      <div style="display:flex; justify-content:flex-end; background-color:#b2b3b5; width: 9%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
+                          <div style="font-size: 6px; background-color:#555; width:{{ engine.torque.current < 0 ? (100 * ( engine.torque.current >= -100 ? engine.torque.current : -100 ) / -100) : 0 }}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
+                      </div>
+                      <div style="background-color:#555; height: 100%; width: 1%;" xmlns="http://www.w3.org/1999/xhtml">
+                      </div>
+                      <div style="background-color:#b2b3b5; width: 90%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
+                          <div style="font-size: 6px; background-color:#555; width:{{ engine.torque.current > 0 ? ( 100 * ( engine.torque.current <= engine.torque.max ? engine.torque.current : engine.torque.max ) / engine.torque.max ) : 0 }}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
+                      </div>
                       </div>
                     </foreignObject>
+
               </g>
               <g
                   inkscape:groupmode="layer"
                   id="layer4"
                   inkscape:label="Calque 4"
                   transform="translate(0,2.1166667)">
-                  <text
-                    xml:space="preserve"
-                    style="font-size:3.56491px;fill:#000000;stroke-width:0.297076"
-                    x="2.2975993"
-                    y="24.287703"
-                    id="text183"><tspan
+                <text
+                  xml:space="preserve"
+                  style="font-size:15.6098px;fill:#000000;stroke-width:1.30081"
+                  x="13.475605"
+                  y="112.74313"
+                  id="text183"><tspan
                     sodipodi:role="line"
                     id="tspan181"
-                    style="stroke-width:0.297076"
-                    x="2.2975993"
-                    y="24.287703">Power (HP): {{ engine.power.hp.current | number : '0' }}</tspan></text>
-                  <text
-                      xml:space="preserve"
-                      style="font-size:2.03491px;fill:#000000;stroke-width:0.169576"
-                      x="3.3347297"
-                      y="27.516668"
-                      id="text123-4-3-9"><tspan
-                        sodipodi:role="line"
-                        id="tspan121-9-6-5"
-                        style="stroke-width:0.169576"
-                        x="3.3347297"
-                        y="27.516668">└ MAX:     {{ engine.power.hp.max | number : '0' }} HP</tspan></text>
-                  <foreignObject
-                    width="53"
-                    height="3"
-                    x="25"
-                    y="25"
-                    id="foreignObject123-2">
-                      <div layout="row" layout-align="space-between" xmlns="http://www.w3.org/1999/xhtml" style="height: 100%;">
-                        <div style="display:flex; justify-content:flex-end; background-color:#b2b3b5; width: 9%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
-                          <div style="font-size: 6px; background-color:#555; width:{{ engine.power.hp.current < 0 ? (100 * ( engine.power.hp.current >= -100 ? engine.power.hp.current : -100 ) / -100) : 0 }}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
-                        </div>
-                        <div style="background-color:#555; height: 5px; width: 1%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">
-                        </div>
-                        <div style="background-color:#b2b3b5; height: 5px; width: 90%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
-                          <div style="font-size: 6px; background-color:#555; width:{{ engine.power.hp.current > 0 ? ( 100 * ( engine.power.hp.current <= engine.power.hp.max ? engine.power.hp.current : engine.power.hp.max ) / engine.power.hp.max ) : 0 }}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
-                        </div>
-                      </div>
-                    </foreignObject>
-              </g>
-              <rect
-                  style="opacity:1;fill:#000000;stroke-width:0.217961"
-                  id="rect1962"
-                  width="79.374992"
-                  height="0.26458332"
-                  x="-9.7999997e-05"
-                  y="6.614583" />
+                    style="stroke-width:1.30081"
+                    x="13.475605"
+                    y="112.74313">Power (HP): {{ engine.power.hp.current | number: 0 }}</tspan></text>
+                <text
+                    xml:space="preserve"
+                    style="font-size:10.9871px;fill:#000000;stroke-width:0.915595"
+                    x="21.577261"
+                    y="125.88331"
+                    id="text123-4-3-9"><tspan
+                      sodipodi:role="line"
+                      id="tspan121-9-6-5"
+                      style="stroke-width:0.915595"
+                      x="21.577261"
+                      y="125.88331">└ MAX:     {{ engine.power.hp.max | number: 0 }} HP</tspan></text>
+              <foreignObject
+                id="foreignObject123-3"
+                width="253.69794"
+                height="12.89974"
+                x="135.77524"
+                y="123.03419">
+                    <div layout="row" layout-align="space-between" xmlns="http://www.w3.org/1999/xhtml" style="height: 100%;">
+                    <div style="display:flex; justify-content:flex-end; background-color:#b2b3b5; width: 9%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
+                      <div style="font-size: 6px; background-color:#555; width:{{ engine.power.hp.current < 0 ? (100 * ( engine.power.hp.current >= -100 ? engine.power.hp.current : -100 ) / -100) : 0 }}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
+                    </div>
+                    <div style="background-color:#555; height: 5px; width: 1%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">
+                    </div>
+                    <div style="background-color:#b2b3b5; height: 5px; width: 90%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
+                      <div style="font-size: 6px; background-color:#555; width:{{ engine.power.hp.current > 0 ? ( 100 * ( engine.power.hp.current <= engine.power.hp.max ? engine.power.hp.current : engine.power.hp.max ) / engine.power.hp.max ) : 0 }}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
+                    </div>
+                    </div>
+                </foreignObject>
+            </g>
+            <rect
+              style="opacity:1;fill:#000000;stroke-width:1.09838"
+              id="rect1962"
+              width="400"
+              height="1.3333334"
+              x="0"
+              y="145"
+              inkscape:label="rect1962" />
             </g>
           </svg>
         `,
