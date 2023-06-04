@@ -3,264 +3,34 @@ angular.module('beamng.apps')
     function ($log, CanvasShortcuts) {
       return {
         template: `
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 400 160"
-            version="1.1"
-            id="svg5"
-            inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
-            sodipodi:docname="dynamic-dyno.svg"
-            inkscape:export-xdpi="25.4"
-            inkscape:export-ydpi="25.4"
-            xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-            xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:svg="http://www.w3.org/2000/svg">
-            <sodipodi:namedview
-                id="namedview7"
-                pagecolor="#505050"
-                bordercolor="#eeeeee"
-                borderopacity="1"
-                inkscape:showpageshadow="false"
-                inkscape:pageopacity="0"
-                inkscape:pagecheckerboard="false"
-                inkscape:deskcolor="#505050"
-                inkscape:document-units="px"
-                showgrid="true"
-                inkscape:zoom="2.56"
-                inkscape:cx="237.5"
-                inkscape:cy="-9.1796875"
-                inkscape:window-width="2560"
-                inkscape:window-height="1361"
-                inkscape:window-x="-9"
-                inkscape:window-y="-9"
-                inkscape:window-maximized="1"
-                inkscape:current-layer="layer4"
-                inkscape:lockguides="false"
-                showborder="true"
-                borderlayer="true"
-                shape-rendering="auto">
-              <inkscape:grid
-                  type="xygrid"
-                  id="grid553"
-                  empspacing="10"
-                  spacingx="0.13333333"
-                  originx="0"
-                  originy="0"
-                  enabled="true"
-                  visible="true"
-                  snapvisiblegridlinesonly="true" />
-            </sodipodi:namedview>
-            <defs
-                id="defs2">
-              <rect
-                  x="173.89658"
-                  y="426.62628"
-                  width="187.90005"
-                  height="23.503693"
-                  id="rect127" />
-              <rect
-                  x="168.3233"
-                  y="366.15784"
-                  width="189.68913"
-                  height="15.08046"
-                  id="rect117" />
-            </defs>
-            <g
-                inkscape:label="Calque 1"
-                inkscape:groupmode="layer"
-                id="layer1">
-              <rect
-                  style="opacity:1;fill:#999999;fill-opacity:1;stroke-width:1.4101;image-rendering:auto"
-                  id="rect1526"
-                  width="400"
-                  height="160"
-                  x="0"
-                  y="-160"
-                  inkscape:label="rect1526"
-                  transform="scale(1,-1)" />
-              <text
-                  xml:space="preserve"
-                  transform="matrix(0.40375996,0,0,0.44398196,251.56426,-10.528751)"
-                  id="text115"
-                  style="white-space:pre;shape-inside:url(#rect117);display:inline;fill:#000000"><tspan
-                    x="168.32422"
-                    y="377.10617"
-                    id="tspan2657">Dynamic Dyno - By BrigitteLPB</tspan></text>
-              <g
-                  inkscape:groupmode="layer"
-                  id="layer2"
-                  inkscape:label="Calque 2">
-                <text
-                    xml:space="preserve"
-                    style="font-size:20.6313px;fill:#000000;stroke-width:1.71928"
-                    x="12.985225"
-                    y="20.000002"
-                    id="text123"><tspan
-                      sodipodi:role="line"
-                      id="tspan121"
-                      style="stroke-width:1.71928"
-                      x="12.985225"
-                      y="20.000002">RPM:     {{ engine.rpm.current | number: 0 }}</tspan></text>
-                <text
-                    xml:space="preserve"
-                    style="font-size:10.9871px;fill:#000000;stroke-width:0.915595"
-                    x="21.577261"
-                    y="34.999977"
-                    id="text123-4"><tspan
-                      sodipodi:role="line"
-                      id="tspan121-9"
-                      style="stroke-width:0.915595"
-                      x="21.577261"
-                      y="34.999977">└ MAX:     {{ engine.rpm.max | number: 0 }}</tspan></text>
-                <foreignObject
-                    id="foreignObject123-1"
-                    width="225.71086"
-                    height="17.921268"
-                    x="136.82736"
-                    y="26.796244">
-                    <div layout="row" layout-align="space-between" xmlns="http://www.w3.org/1999/xhtml"  style="height: 100%;">
-                      <div style="background-color:#b2b3b5; width: 95%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
-                      <div style="font-size: 6px; background-color:#555; width:{{ engine.rpm.current > 0 ? ( 100 * ( engine.rpm.current <= engine.rpm.max ? engine.rpm.current : engine.rpm.max ) / engine.rpm.max ) : 0}}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
-                      </div>
-                      <div style="background-color:#500; width: 5%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
-                      <div style="font-size: 6px; background-color:#F00; width:{{ engine.rpm.current > engine.rpm.max ? ( 100 * ( engine.rpm.current - engine.rpm.max ) / ( ( engine.rpm.max * 5 ) / 95 ) ) : 0}}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
-                      </div>
-                    </div>
-                </foreignObject>
-              </g>
-              <g
-                  inkscape:groupmode="layer"
-                  id="layer3"
-                  inkscape:label="Calque 3"
-                  transform="translate(0,1.0583333)">
+          <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background-color: whitesmoke">
 
-                <text
-                    xml:space="preserve"
-                    transform="matrix(1.1707319,0,0,1.300813,-188.58616,-503.40172)"
-                    id="text125"
-                    style="white-space:pre;shape-inside:url(#rect127);display:inline;fill:#000000"><tspan
-                      x="173.89648"
-                      y="437.57492"
-                      id="tspan2659">Torque (N.m):  {{ engine.torque.current | number: 0 }}</tspan></text>
-                <text
-                  xml:space="preserve"
-                  style="font-size:10.9871px;fill:#000000;stroke-width:0.915595"
-                  x="21.577261"
-                  y="83.941643"
-                  id="text123-4-3"><tspan
-                    sodipodi:role="line"
-                    id="tspan121-9-6"
-                    style="stroke-width:0.915595"
-                    x="21.577261"
-                    y="83.941643">└ MAX:     {{ engine.torque.max | number: 0 }} N.m</tspan></text>
-                <foreignObject
-                    id="foreignObject123-2"
-                    width="254.08855"
-                    height="13.173177"
-                    x="135.40018"
-                    y="78.124031">
-                      <div layout="row" layout-align="space-between" xmlns="http://www.w3.org/1999/xhtml" style="height: 100%;">
-                      <div style="display:flex; justify-content:flex-end; background-color:#b2b3b5; width: 9%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
-                          <div style="font-size: 6px; background-color:#555; width:{{ engine.torque.current < 0 ? (100 * ( engine.torque.current >= -100 ? engine.torque.current : -100 ) / -100) : 0 }}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
-                      </div>
-                      <div style="background-color:#555; height: 100%; width: 1%;" xmlns="http://www.w3.org/1999/xhtml">
-                      </div>
-                      <div style="background-color:#b2b3b5; width: 90%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
-                          <div style="font-size: 6px; background-color:#555; width:{{ engine.torque.current > 0 ? ( 100 * ( engine.torque.current <= engine.torque.max ? engine.torque.current : engine.torque.max ) / engine.torque.max ) : 0 }}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
-                      </div>
-                      </div>
-                    </foreignObject>
+            <div style="height: 70%; position: relative" >
+              <canvas style="position: absolute; top: 0; left: 0" width="50" height="50"></canvas>
+              <canvas style="position: absolute; top: 0; left: 0" width="50" height="50"></canvas>
+            </div>
 
-              </g>
-              <g
-                  inkscape:groupmode="layer"
-                  id="layer4"
-                  inkscape:label="Calque 4"
-                  transform="translate(0,2.1166667)">
-                <text
-                  xml:space="preserve"
-                  style="font-size:15.6098px;fill:#000000;stroke-width:1.30081"
-                  x="13.475605"
-                  y="112.74313"
-                  id="text183"><tspan
-                    sodipodi:role="line"
-                    id="tspan181"
-                    style="stroke-width:1.30081"
-                    x="13.475605"
-                    y="112.74313">Power (HP): {{ engine.power.hp.current | number: 0 }}</tspan></text>
-                <text
-                    xml:space="preserve"
-                    style="font-size:10.9871px;fill:#000000;stroke-width:0.915595"
-                    x="21.577261"
-                    y="125.88331"
-                    id="text123-4-3-9"><tspan
-                      sodipodi:role="line"
-                      id="tspan121-9-6-5"
-                      style="stroke-width:0.915595"
-                      x="21.577261"
-                      y="125.88331">└ MAX:     {{ engine.power.hp.max | number: 0 }} HP</tspan></text>
-              <foreignObject
-                id="foreignObject123-3"
-                width="253.69794"
-                height="12.89974"
-                x="135.77524"
-                y="123.03419">
-                    <div layout="row" layout-align="space-between" xmlns="http://www.w3.org/1999/xhtml" style="height: 100%;">
-                    <div style="display:flex; justify-content:flex-end; background-color:#b2b3b5; width: 9%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
-                      <div style="font-size: 6px; background-color:#555; width:{{ engine.power.hp.current < 0 ? (100 * ( engine.power.hp.current >= -100 ? engine.power.hp.current : -100 ) / -100) : 0 }}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
-                    </div>
-                    <div style="background-color:#555; height: 5px; width: 1%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">
-                    </div>
-                    <div style="background-color:#b2b3b5; height: 5px; width: 90%; height: 100%; overflow: hidden;" xmlns="http://www.w3.org/1999/xhtml">
-                      <div style="font-size: 6px; background-color:#555; width:{{ engine.power.hp.current > 0 ? ( 100 * ( engine.power.hp.current <= engine.power.hp.max ? engine.power.hp.current : engine.power.hp.max ) / engine.power.hp.max ) : 0 }}%; height: 100%;" xmlns="http://www.w3.org/1999/xhtml">&nbsp;</div>
-                    </div>
-                    </div>
-                </foreignObject>
-            </g>
-            <rect
-              style="opacity:1;fill:#000000;stroke-width:1.09838"
-              id="rect1962"
-              width="400"
-              height="1.3333334"
-              x="0"
-              y="145"
-              inkscape:label="rect1962" />
-            </g>
-          </svg>
-        `,
+            <div style="position: relative; height: 120px; padding: 10% overflow-x: auto; overflow-y: hidden" layout="row" layout-align="left center">
+              <div layout="row" flex layout-padding>
+                <table ng-repeat="(key, obj) in engines" style="vertical-align: center; font-size: 12px; margin: 0 4px 0 4px; padding: 0 3px 0 3px; border-left: 1px solid black; border-right: 1px solid black; border-radius: 2px;">
+                  <tr><th colspan="2">{{ obj.name }}</th></tr>
+                  <tr>
+                    <td><graph-legend-tip type="line" color="black" dash-array="{{ obj.dashArray }}"></graph-legend-tip> {{:: "ui.apps.torquecurve.Torque" | translate}}</td>
+                    <td style="font-family: monospace">{{ obj.torque.val.toFixed(2) }}/{{ obj.torque.max.toFixed(0) }}</td>
+                    <td style="font-family: monospace; padding: 0 3px">[{{ obj.torque.units }}]</td>
+                  </tr>
+                  <tr>
+                    <td><graph-legend-tip type="line" color="red" dash-array="{{ obj.dashArray }}"></graph-legend-tip> {{:: "ui.apps.torquecurve.Power" | translate}}</td>
+                    <td style="font-family: monospace">{{ obj.power.val.toFixed(2) }}/{{ obj.power.max.toFixed(0) }}</td>
+                    <td style="font-family: monospace; padding: 0 3px">[{{ obj.power.units }}]</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+          </div>`,
         replace: true,
         restrict: 'EA',
-        controller: ['$scope', function ($scope) {
-          // settings default values
-          $scope.vehicle = {
-            id: 0,
-            engineNames: []
-          };
-          $scope.engine = {
-            rpm: {
-              idle: 0,
-              current: 0,
-              max: 0
-            },
-            torque: {
-              current: 0,
-              max: 0
-            },
-            power: {
-              hp: {
-                current: 0,
-                max: 0
-              },
-              watt: {
-                current: 0,
-                max: 0
-              }
-            }
-          }
-        }],
-
         link: function (scope, element, attrs) {
 
           var streamsList = ['engineInfo']
@@ -269,59 +39,260 @@ angular.module('beamng.apps')
             StreamsManager.remove(streamsList)
           })
 
+          var margins = { top: 0, bottom: 0, left: 0, right: 0 }
+
+          var canvasWrapper = element[0].children[1]
+          var staticCanvas = element[0].getElementsByTagName('canvas')[0]
+          var max_ctx = staticCanvas.getContext('2d')
+          var dynamicCanvas = element[0].getElementsByTagName('canvas')[1]
+          var cursor_ctx = dynamicCanvas.getContext('2d')
+          // var dyno_ctx = dynamicCanvas.getContext('2d')
+          var xFactor = -1
+
+          var plotMargins = { top: 15, bottom: 25, left: 25, right: 26 }
+
+          scope.engines = {};
+          scope.vehicleID = '';
+
+          scope.$on('VehicleChange', () => {
+            scope.vehicleID = ''
+          })
 
 
           scope.$on('TorqueCurveChanged', function (_, data) {
+            let _data = JSON.parse(JSON.stringify(data));
+            _data.curves.forEach(element => {
+              element.power = [];
+              element.torque = [];
+            });
+            console.log(JSON.stringify(_data));
+            console.log("length curves : " + data.curves[0].power.length);
 
-            if (data.vehicleID !== scope.vehicle.id) {
-              // console.log("new vehicle detected !"); // DEBUG
-
-              scope.vehicle.id = data.vehicleID;
-              scope.vehicle.engineNames = [{ name: data.deviceName }];
-
-              scope.engine.torque.max = data.maxTorque;
-              scope.engine.power.hp.max = data.maxPower;
-              scope.engine.power.watt.max = data.maxPower * 736;
-            } else {
-              // console.log("got existing vehicle!"); // DEBUG
-
-              // check if we already have this engine
-              if (!scope.vehicle.engineNames.find(engine => engine.name === data.deviceName)) {
-                scope.vehicle.engineNames.push({ name: data.deviceName });
-
-                scope.engine.torque.max += data.maxTorque;
-                scope.engine.power.hp.max += data.maxPower;
-                scope.engine.power.watt.max += data.maxPower * 736;
-
-              }
+            if (scope.vehicleID !== data.vehicleID) {
+              console.log("got a new vehicle"); // DEBUG
+              // reset all torques curves
+              scope.vehicleID = data.vehicleID
+              scope.engines = generateDefaultEngineObject(data.maxRPM);
             }
 
-            // console.log("data: " + JSON.stringify(data));  // DEBUG
-            // console.log(`data RPM: ${data.maxRPM}, data Torque: ${data.maxTorque}, data Power: ${data.maxPower}`);  // DEBUG
-            // console.log("engine: " + JSON.stringify(scope.engine));  // DEBUG
-            // console.log("vehicle: " + JSON.stringify(scope.vehicle));  // DEBUG
+            if (!scope.engines.max.engineNames.find(engineNames => engineNames === data.deviceName)) {
+              // creating a new dynamic engine
+              const maxPriority = Math.max(...data.curves.map(e => e.priority));
+              const maxPriorityCurve = data.curves.find(element => element.priority == maxPriority);
+
+              if (scope.engines.max.priority < maxPriority) {
+                scope.engines.max.priority = maxPriority;
+                scope.engines.max.torque.max = Math.max.apply(Math, maxPriorityCurve.torque);
+                scope.engines.max.torque.curve = maxPriorityCurve.torque;
+                scope.engines.max.power.max = Math.max.apply(Math, maxPriorityCurve.power);
+                scope.engines.max.power.curve = maxPriorityCurve.power;
+
+                scope.engines.max.engineNames.push(data.deviceName);
+              }
+
+              plotStaticGraphs();
+            }
+          });
+
+          /**
+           * Draw the maximum power and torque curve
+           */
+          function plotStaticGraphs() {
+            xFactor = (dynamicCanvas.width - plotMargins.left - plotMargins.right) / scope.engines.max.maxRPM;
+
+            max_ctx.clearRect(0, 0, staticCanvas.width, staticCanvas.height)
+
+            const maxPower = Math.ceil(scope.engines.max.power.max / 250) * 250;
+            const maxTorque = Math.ceil(scope.engines.max.torque.max / 250) * 250;
+            var powerTicks = Array(6).fill().map((x, i, a) => i * maxPower / (a.length - 1))
+            var torqueTicks = Array(6).fill().map((x, i, a) => i * maxTorque / (a.length - 1))
+            var rpmTicks = Array(Math.floor(scope.engines.max.maxRPM / 1000) + 1).fill().map((x, i) => i * 1000)
+
+            CanvasShortcuts.plotAxis(max_ctx, 'left', [0, maxTorque], torqueTicks, plotMargins, { numLines: torqueTicks.length, color: 'darkgrey', dashArray: [2, 3] }, 'black')
+            CanvasShortcuts.plotAxis(max_ctx, 'right', [0, maxPower], powerTicks, plotMargins, null, 'red')
+            CanvasShortcuts.plotAxis(max_ctx, 'top', [0, scope.engines.max.maxRPM], [], plotMargins, null)
+            CanvasShortcuts.plotAxis(max_ctx, 'bottom', [0, scope.engines.max.maxRPM], rpmTicks, plotMargins, { values: rpmTicks, color: 'darkgrey', dashArray: [2, 3] }, 'black')
+
+            // draw static curve
+            CanvasShortcuts.plotData(max_ctx, scope.engines.max.torque.curve.map(key => UiUnits.torque(key).val), 0, maxTorque, { margin: plotMargins, lineWidth: 2, lineColor: 'black', dashArray: scope.engines.max.dashArray })
+            CanvasShortcuts.plotData(max_ctx, scope.engines.max.power.curve.map(key => UiUnits.power(key).val), 0, maxPower, { margin: plotMargins, lineWidth: 2, lineColor: 'red', dashArray: scope.engines.max.dashArray })
+            // draw dynamic curve
+            CanvasShortcuts.plotData(max_ctx, scope.engines.current.torque.curve.map(key => UiUnits.torque(key).val), 0, maxTorque, { margin: plotMargins, lineWidth: 2, lineColor: 'black', dashArray: [] })
+            CanvasShortcuts.plotData(max_ctx, scope.engines.current.power.curve.map(key => UiUnits.power(key).val), 0, maxPower, { margin: plotMargins, lineWidth: 2, lineColor: 'red', dashArray: [] })
+          }
+
+          /**
+           * draw an orange cursor on the graph
+           * @param {*} rpm
+           * @returns
+           */
+          function drawCursor(rpm) {
+            cursor_ctx.clearRect(0, 0, dynamicCanvas.width, dynamicCanvas.height);
+
+            if (rpm >= scope.engines.max.maxRPM) { return; }
+
+            var rpmX = plotMargins.left + Math.floor(rpm * xFactor);
+
+            // RPM indicator
+            cursor_ctx.beginPath();
+            cursor_ctx.moveTo(rpmX, plotMargins.top);
+            cursor_ctx.lineTo(rpmX, dynamicCanvas.height - plotMargins.bottom);
+
+            cursor_ctx.lineWidth = 2;
+            cursor_ctx.strokeStyle = 'orange';
+            cursor_ctx.shadowBlur = 30;
+            cursor_ctx.shadowColor = 'steelblue';
+            cursor_ctx.stroke();
+          }
+
+
+          /**
+           * generate a default engine object
+           * @param {*} maxRPM
+           */
+          function generateDefaultEngineObject(maxRPM) {
+            return {
+              current: {
+                name: "Dyno",
+                maxRPM: maxRPM,
+                rpm: 0,
+                dashArray: [],
+                torque: {
+                  val: 0,
+                  max: 0,
+                  units: UiUnits.torque(0).unit,
+                  rawCurve: new Array(maxRPM).fill(0),
+                  curve: new Array(maxRPM).fill(0)
+                },
+                power: {
+                  val: 0,
+                  max: 0,
+                  units: UiUnits.power(0).unit,
+                  rawCurve: new Array(maxRPM).fill(0),
+                  curve: new Array(maxRPM).fill(0)
+                }
+              },
+              max: {
+                name: "Max",
+                maxRPM: maxRPM,
+                dashArray: [10, 4],
+                engineNames: [],
+                priority: 0,
+                torque: {
+                  val: 0,
+                  max: 0,
+                  units: UiUnits.torque(0).unit,
+                  curve: new Array(maxRPM).fill(0)
+                },
+                power: {
+                  val: 0,
+                  max: 0,
+                  units: UiUnits.power(0).unit,
+                  curve: new Array(maxRPM).fill(0)
+                }
+              }
+            }
+          }
+
+
+          scope.graph = function () {
+            plotStaticGraphs()
+          }
+
+          scope.$on('streamsUpdate', function (event, streams) {
+            // console.log("streams changed:" + JSON.stringify(streams))
+            // console.log(JSON.stringify(scope.engines)); // DEBUG
+            if (streams.engineInfo != undefined && scope.engines.max != undefined && scope.engines.current != undefined) {
+              // console.log(JSON.stringify(scope.vehicleID)); // DEBUG
+
+              const ENGINE_RPM_INDEX = 4;
+              const ENGINE_TORQUE_INDEX = 8;
+
+              const _rpm = streams.engineInfo[ENGINE_RPM_INDEX] <= scope.engines.max.maxRPM ? streams.engineInfo[ENGINE_RPM_INDEX] : scope.engines.max.maxRPM;
+              const rpmInd = Math.floor(_rpm);
+
+              // update dynamic dyno data for this RPM
+              const torque = streams.engineInfo[ENGINE_TORQUE_INDEX] >= 0 ? streams.engineInfo[ENGINE_TORQUE_INDEX] : 0;
+              const power = ((2 * Math.PI * _rpm * torque) / 60) / 736;
+
+              // update current curve data
+              scope.engines.current.torque.rawCurve[rpmInd] = torque;
+              scope.engines.current.power.rawCurve[rpmInd] = power;
+
+              scope.engines.current.torque.curve = smoothCurve(scope.engines.current.torque.rawCurve);
+              scope.engines.current.power.curve = smoothCurve(scope.engines.current.power.rawCurve);
+
+              // update max value for current curve
+              scope.engines.current.torque.max = Math.max(scope.engines.current.torque.max, torque);
+              scope.engines.current.power.max = Math.max(scope.engines.current.power.max, power);
+
+              // update vals
+              scope.engines.current.torque.val = torque;
+              scope.engines.current.power.val = power;
+
+              scope.engines.max.torque.val = scope.engines.max.torque.curve[rpmInd];
+              scope.engines.max.power.val = scope.engines.max.power.curve[rpmInd];
+
+              drawCursor(_rpm);
+              plotStaticGraphs();
+            }
           });
 
 
-          scope.$on('streamsUpdate', function (event, streams) {
-            const ENGINE_IDLE_SPEED_INDEX = 0;
-            const ENGINE_MAX_SPEED_INDEX = 1;
-            const ENGINE_SPEED_INDEX = 4;
-            const ENGINE_TORQUE_INDEX = 8;
+          function smoothCurve(curve) {
+            const ROLLING_AVERAGE_SIZE = 10;
+            let _curve = curve;
 
-            if(streams.engineInfo != undefined){
-              scope.engine.rpm.idle = streams.engineInfo[ENGINE_IDLE_SPEED_INDEX];
-              scope.engine.rpm.max = streams.engineInfo[ENGINE_MAX_SPEED_INDEX];
-              scope.engine.rpm.current = streams.engineInfo[ENGINE_SPEED_INDEX];
-              scope.engine.torque.current = streams.engineInfo[ENGINE_TORQUE_INDEX];
-              scope.engine.power.watt.current = (2 * Math.PI * scope.engine.rpm.current * scope.engine.torque.current) / 60;
-              scope.engine.power.hp.current = scope.engine.power.watt.current / 736;
+            // const maxLength = _curve.length;
+
+            // for (let i = 0; i < maxLength; i++) {
+            //   if(_curve[i] == 0){
+            //     _arr = Array.prototype.concat((i - ROLLING_AVERAGE_SIZE < 0 ? (new Array(Math.abs(i - ROLLING_AVERAGE_SIZE)).fill(0)) : [])
+            //       + _curve.slice(i - ROLLING_AVERAGE_SIZE >= 0 ? Math.abs(i - ROLLING_AVERAGE_SIZE) : 0, i + ROLLING_AVERAGE_SIZE <= maxLength ? Math.abs(i + ROLLING_AVERAGE_SIZE) : maxLength)
+            //       + (i + ROLLING_AVERAGE_SIZE > maxLength ? (new Array((i + ROLLING_AVERAGE_SIZE) - maxLength).fill(0)) : []));
+
+
+            //     var total = 0;
+            //     for (var e in _arr) {
+            //       total += e;
+            //     }
+            //     const average = total / _arr.length;
+
+            //     _curve[i] = average;
+
+            //   }
+
+
+            // }
+
+            // console.log(JSON.stringify(_curve));  // DEBUG
+            return _curve;
+          }
+
+
+
+          var _ready = false;
+
+          scope.$on('app:resized', function (event, data) {
+            // We can use this event as initialization trigger since it is emitted from
+            // the app-container for this reason
+            staticCanvas.width = canvasWrapper.offsetWidth;
+            staticCanvas.height = canvasWrapper.offsetHeight + plotMargins.bottom;
+            dynamicCanvas.width = canvasWrapper.offsetWidth;
+            dynamicCanvas.height = canvasWrapper.offsetHeight + plotMargins.bottom;
+
+            if (!_ready) {
+              _ready = true;
+              bngApi.activeObjectLua('controller.mainController.sendTorqueData()');
+            } else {
+              plotStaticGraphs();
             }
-
-
-            // console.log(JSON.stringify(streams));  // DEBUG
-            // console.log(JSON.stringify(scope.engine));  // DEBUG
           })
+
+          scope.$on('VehicleFocusChanged', function () {
+            bngApi.activeObjectLua('controller.mainController.sendTorqueData()');
+          })
+
         }
       }
     }])
