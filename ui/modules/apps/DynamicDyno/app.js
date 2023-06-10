@@ -8,6 +8,7 @@ angular.module('beamng.apps')
             <div style="height: 70%; position: relative" >
               <canvas style="position: absolute; top: 0; left: 0" width="50" height="50"></canvas>
               <canvas style="position: absolute; top: 0; left: 0" width="50" height="50"></canvas>
+              <canvas style="position: absolute; top: 0; left: 0" width="50" height="50"></canvas>
             </div>
 
             <div style="position: relative; height: 120px; padding: 10% overflow-x: auto; overflow-y: hidden" layout="row" layout-align="left center">
@@ -32,6 +33,8 @@ angular.module('beamng.apps')
         replace: true,
         restrict: 'EA',
         link: function (scope, element, attrs) {
+          const SMOOTHING_FACTOR = 20;
+
 
           var streamsList = ['engineInfo']
           StreamsManager.add(streamsList)
@@ -44,9 +47,13 @@ angular.module('beamng.apps')
           var canvasWrapper = element[0].children[1]
           var staticCanvas = element[0].getElementsByTagName('canvas')[0]
           var max_ctx = staticCanvas.getContext('2d')
-          var dynamicCanvas = element[0].getElementsByTagName('canvas')[1]
+
+          var dynoCanvas = element[0].getElementsByTagName('canvas')[1]
+          var dyno_ctx = dynoCanvas.getContext('2d')
+
+          var dynamicCanvas = element[0].getElementsByTagName('canvas')[2]
           var cursor_ctx = dynamicCanvas.getContext('2d')
-          // var dyno_ctx = dynamicCanvas.getContext('2d')
+
           var xFactor = -1
 
           var plotMargins = { top: 15, bottom: 25, left: 25, right: 26 }
@@ -60,13 +67,13 @@ angular.module('beamng.apps')
 
 
           scope.$on('TorqueCurveChanged', function (_, data) {
-            let _data = JSON.parse(JSON.stringify(data));
-            _data.curves.forEach(element => {
-              element.power = [];
-              element.torque = [];
-            });
-            console.log(JSON.stringify(_data));
-            console.log("length curves : " + data.curves[0].power.length);
+            // let _data = JSON.parse(JSON.stringify(data));
+            // _data.curves.forEach(element => {
+            //   element.power = [];
+            //   element.torque = [];
+            // });
+            // console.log(JSON.stringify(_data));
+            // console.log("length curves : " + data.curves[0].power.length);
 
             if (scope.vehicleID !== data.vehicleID) {
               console.log("got a new vehicle"); // DEBUG
@@ -117,9 +124,36 @@ angular.module('beamng.apps')
             CanvasShortcuts.plotData(max_ctx, scope.engines.max.torque.curve.map(key => UiUnits.torque(key).val), 0, maxTorque, { margin: plotMargins, lineWidth: 2, lineColor: 'black', dashArray: scope.engines.max.dashArray })
             CanvasShortcuts.plotData(max_ctx, scope.engines.max.power.curve.map(key => UiUnits.power(key).val), 0, maxPower, { margin: plotMargins, lineWidth: 2, lineColor: 'red', dashArray: scope.engines.max.dashArray })
             // draw dynamic curve
-            CanvasShortcuts.plotData(max_ctx, scope.engines.current.torque.curve.map(key => UiUnits.torque(key).val), 0, maxTorque, { margin: plotMargins, lineWidth: 2, lineColor: 'black', dashArray: [] })
-            CanvasShortcuts.plotData(max_ctx, scope.engines.current.power.curve.map(key => UiUnits.power(key).val), 0, maxPower, { margin: plotMargins, lineWidth: 2, lineColor: 'red', dashArray: [] })
+            // CanvasShortcuts.plotData(max_ctx, scope.engines.current.torque.curve.map(key => UiUnits.torque(key).val), 0, maxTorque, { margin: plotMargins, lineWidth: 2, lineColor: 'black', dashArray: [] })
+            // CanvasShortcuts.plotData(max_ctx, scope.engines.current.power.curve.map(key => UiUnits.power(key).val), 0, maxPower, { margin: plotMargins, lineWidth: 2, lineColor: 'red', dashArray: [] })
           }
+
+
+          /**
+           * Draw the current power and torque curve
+           */
+          function plotDynamicGraphs() {
+            // xFactor = (dynamicCanvas.width - plotMargins.left - plotMargins.right) / scope.engines.max.maxRPM;
+
+            dyno_ctx.clearRect(0, 0, dynoCanvas.width, dynoCanvas.height)
+
+            const maxPower = Math.ceil(scope.engines.max.power.max / 250) * 250;
+            const maxTorque = Math.ceil(scope.engines.max.torque.max / 250) * 250;
+            var powerTicks = Array(6).fill().map((x, i, a) => i * maxPower / (a.length - 1))
+            var torqueTicks = Array(6).fill().map((x, i, a) => i * maxTorque / (a.length - 1))
+            var rpmTicks = Array(Math.floor(scope.engines.max.maxRPM / 1000) + 1).fill().map((x, i) => i * 1000)
+
+            CanvasShortcuts.plotAxis(dyno_ctx, 'left', [0, maxTorque], torqueTicks, plotMargins, null)
+            CanvasShortcuts.plotAxis(dyno_ctx, 'right', [0, maxPower], powerTicks, plotMargins, null)
+            CanvasShortcuts.plotAxis(dyno_ctx, 'top', [0, scope.engines.max.maxRPM/SMOOTHING_FACTOR], [], plotMargins, null)
+            CanvasShortcuts.plotAxis(dyno_ctx, 'bottom', [0, scope.engines.max.maxRPM/SMOOTHING_FACTOR], rpmTicks, plotMargins, null)
+
+            // draw dynamic curve
+            CanvasShortcuts.plotData(dyno_ctx, scope.engines.current.torque.curve.map(key => UiUnits.torque(key).val), 0, maxTorque, { margin: plotMargins, lineWidth: 2, lineColor: 'black', dashArray: [] })
+            CanvasShortcuts.plotData(dyno_ctx, scope.engines.current.power.curve.map(key => UiUnits.power(key).val), 0, maxPower, { margin: plotMargins, lineWidth: 2, lineColor: 'red', dashArray: [] })
+          }
+
+
 
           /**
            * draw an orange cursor on the graph
@@ -161,15 +195,13 @@ angular.module('beamng.apps')
                   val: 0,
                   max: 0,
                   units: UiUnits.torque(0).unit,
-                  rawCurve: new Array(maxRPM).fill(0),
-                  curve: new Array(maxRPM).fill(0)
+                  curve: new Array(Math.floor(maxRPM/SMOOTHING_FACTOR)).fill(0)
                 },
                 power: {
                   val: 0,
                   max: 0,
                   units: UiUnits.power(0).unit,
-                  rawCurve: new Array(maxRPM).fill(0),
-                  curve: new Array(maxRPM).fill(0)
+                  curve: new Array(Math.floor(maxRPM/SMOOTHING_FACTOR)).fill(0)
                 }
               },
               max: {
@@ -216,11 +248,8 @@ angular.module('beamng.apps')
               const power = ((2 * Math.PI * _rpm * torque) / 60) / 736;
 
               // update current curve data
-              scope.engines.current.torque.rawCurve[rpmInd] = torque;
-              scope.engines.current.power.rawCurve[rpmInd] = power;
-
-              scope.engines.current.torque.curve = smoothCurve(scope.engines.current.torque.rawCurve);
-              scope.engines.current.power.curve = smoothCurve(scope.engines.current.power.rawCurve);
+              scope.engines.current.torque.curve[Math.floor(rpmInd/SMOOTHING_FACTOR)] = torque;
+              scope.engines.current.power.curve[Math.floor(rpmInd/SMOOTHING_FACTOR)] = power;
 
               // update max value for current curve
               scope.engines.current.torque.max = Math.max(scope.engines.current.torque.max, torque);
@@ -233,42 +262,11 @@ angular.module('beamng.apps')
               scope.engines.max.torque.val = scope.engines.max.torque.curve[rpmInd];
               scope.engines.max.power.val = scope.engines.max.power.curve[rpmInd];
 
-              drawCursor(_rpm);
               plotStaticGraphs();
+              drawCursor(_rpm);
+              plotDynamicGraphs();
             }
           });
-
-
-          function smoothCurve(curve) {
-            const ROLLING_AVERAGE_SIZE = 10;
-            let _curve = curve;
-
-            // const maxLength = _curve.length;
-
-            // for (let i = 0; i < maxLength; i++) {
-            //   if(_curve[i] == 0){
-            //     _arr = Array.prototype.concat((i - ROLLING_AVERAGE_SIZE < 0 ? (new Array(Math.abs(i - ROLLING_AVERAGE_SIZE)).fill(0)) : [])
-            //       + _curve.slice(i - ROLLING_AVERAGE_SIZE >= 0 ? Math.abs(i - ROLLING_AVERAGE_SIZE) : 0, i + ROLLING_AVERAGE_SIZE <= maxLength ? Math.abs(i + ROLLING_AVERAGE_SIZE) : maxLength)
-            //       + (i + ROLLING_AVERAGE_SIZE > maxLength ? (new Array((i + ROLLING_AVERAGE_SIZE) - maxLength).fill(0)) : []));
-
-
-            //     var total = 0;
-            //     for (var e in _arr) {
-            //       total += e;
-            //     }
-            //     const average = total / _arr.length;
-
-            //     _curve[i] = average;
-
-            //   }
-
-
-            // }
-
-            // console.log(JSON.stringify(_curve));  // DEBUG
-            return _curve;
-          }
-
 
 
           var _ready = false;
@@ -278,6 +276,10 @@ angular.module('beamng.apps')
             // the app-container for this reason
             staticCanvas.width = canvasWrapper.offsetWidth;
             staticCanvas.height = canvasWrapper.offsetHeight + plotMargins.bottom;
+
+            dynoCanvas.width = canvasWrapper.offsetWidth;
+            dynoCanvas.height = canvasWrapper.offsetHeight + plotMargins.bottom;
+
             dynamicCanvas.width = canvasWrapper.offsetWidth;
             dynamicCanvas.height = canvasWrapper.offsetHeight + plotMargins.bottom;
 
@@ -292,7 +294,6 @@ angular.module('beamng.apps')
           scope.$on('VehicleFocusChanged', function () {
             bngApi.activeObjectLua('controller.mainController.sendTorqueData()');
           })
-
         }
       }
     }])
