@@ -1,3 +1,190 @@
+class VehicleCurves {
+    static PRECISION_FACTOR = 0;
+    static MIN_TORQUE = 1;
+
+    engines = [];
+    maxRPM = 0;
+    enginePriority = 0;
+    current = {
+        name: "Dyno",
+        rpm: 0,
+        dashArray: [],
+        torque: {
+            val: 0,
+            max: 0,
+            units: UiUnits.torque(0).unit,
+            curve: []
+        },
+        power: {
+            val: 0,
+            max: 0,
+            units: UiUnits.power(0).unit,
+            curve: []
+        }
+    };
+
+    max = {
+        name: "Max",
+        dashArray: [10, 4],
+        torque: {
+            val: 0,
+            max: 0,
+            units: UiUnits.torque(0).unit,
+            curve: []
+        },
+        power: {
+            val: 0,
+            max: 0,
+            units: UiUnits.power(0).unit,
+            curve: []
+        }
+    }
+
+
+    constructor(vehicleId) {
+        this.vehicleId = vehicleId;
+    }
+
+    /**
+     * make default object with maxRPM
+     * @param {*} maxRPM
+     * @returns
+     */
+    static makeDefault(vehicleId, maxRPM) {
+        const obj = new VehicleCurves(vehicleId);
+        obj.maxRPM = maxRPM;
+        // dyno
+        obj.current.torque.curve = new Array(Math.floor(maxRPM / (100 - VehicleCurves.PRECISION_FACTOR))).fill(0);
+        obj.current.power.curve = new Array(Math.floor(maxRPM / (100 - VehicleCurves.PRECISION_FACTOR))).fill(0);
+        // max
+        obj.max.torque.curve = new Array(Math.floor(maxRPM / (100 - VehicleCurves.PRECISION_FACTOR))).fill(0);
+        obj.max.power.curve = new Array(Math.floor(maxRPM / (100 - VehicleCurves.PRECISION_FACTOR))).fill(0);
+
+        return obj;
+    };
+
+
+    /**
+     * return a js object
+     * @returns
+     */
+    getObject(){
+        return {
+            current: this.current,
+            max: this.max,
+        }
+    }
+
+    /**
+     * Add a new engine to the vehicle
+     * @param {*} engine
+     */
+    addEngine(engine){
+        console.debug(JSON.stringify(engine));
+        console.debug(engine.priority);
+
+        if(engine.priority < this.enginePriority){
+            return;
+        }
+
+        if(engine.priority > this.enginePriority){
+            this.enginePriority = engine.priority;
+
+            // torque
+            this.max.torque.max = 0;
+            this.max.torque.curve = [];
+
+            // power
+            this.max.power.max = 0;
+            this.max.power.curve = [];
+        }
+
+        for (let e of this.engines){
+            let isEqual = false;
+            e.torque.forEach((t, i) => {
+                isEqual = t == engine.torque[i];
+            });
+
+            if(isEqual){
+                console.debug('already have this engine');
+                return;
+            }
+        }
+
+        this.engines.push(engine);
+
+        // calculate torque
+        var max_torque = 0;
+        const torque_curve = Array(Math.max(...this.engines.map(engine => engine.torque.length))).fill(0);
+        this.engines.map(engine => engine.torque).forEach(list => {
+            list.forEach((torque, i) => {
+                torque_curve[i] += torque;
+                if (torque_curve[i] > max_torque) {
+                    max_torque = torque_curve[i]
+                }
+            });
+        });
+        this.max.torque.max = max_torque;
+        this.max.torque.curve = torque_curve;
+
+        console.debug(`maxTorque: ${max_torque}`);
+
+        // calculate power
+        var max_power = 0;
+        const power_curve = Array(Math.max(...this.engines.map(engine => engine.power.length))).fill(0);
+        this.engines.map(engine => engine.power).forEach(list => {
+            list.forEach((power, i) => {
+                power_curve[i] += power;
+                if (power_curve[i] > max_power) {
+                    max_power = power_curve[i]
+                }
+            });
+        });
+        this.max.power.max = max_power;
+        this.max.power.curve = power_curve;
+    }
+
+
+    /**
+     * Set torque and power value for a given RPM
+     * @param {double} rpm
+     * @param {double} torque
+     */
+    updateCurrentValues(rpm, torque){
+        const rpmInd = Math.min(Math.floor(rpm), this.maxRPM - 1);
+        const power = ((2 * Math.PI * rpm * torque) / 60) / 736;
+
+        // console.debug(`rpm: ${rpm} | torque: ${torque} | power: ${power}`);
+
+        // update runtime vals
+        this.current.torque.val = torque;
+        this.current.power.val = power;
+
+        this.max.torque.val = this.max.torque.curve[rpmInd];
+        this.max.power.val = this.max.power.curve[rpmInd];
+
+        if (torque >= VehicleCurves.MIN_TORQUE) {
+            // update current curve data
+            const currentIndex = Math.floor(rpmInd / (100 - VehicleCurves.PRECISION_FACTOR));
+            this.current.torque.curve[currentIndex] = torque;
+            this.current.power.curve[currentIndex] = power;
+
+            // update max value for current curve
+            this.current.torque.max = Math.max(this.current.torque.max, torque);
+            this.current.power.max = Math.max(this.current.power.max, power);
+        }
+    }
+
+    resetCurrent(){
+        // torque
+        this.current.torque.max = 0;
+        this.current.torque.curve = new Array(Math.floor(this.maxRPM / (100 - VehicleCurves.PRECISION_FACTOR))).fill(0);
+        // power
+        this.current.power.max = 0;
+        this.current.power.curve = new Array(Math.floor(this.maxRPM / (100 - VehicleCurves.PRECISION_FACTOR))).fill(0);
+    }
+}
+
 angular.module('beamng.apps')
     .directive('dynamicDyno', ['$log', 'CanvasShortcuts',
         function ($log, CanvasShortcuts) {
@@ -12,7 +199,7 @@ angular.module('beamng.apps')
                         </div>
                         <div style="display: flex; flex-direction: row; justify-content: space-around; width: 100%; padding: 6px 0;">
                             <div style="display: flex; flex-direction: column; width: 40%; height: inherit;"
-                                ng-repeat="(key, obj) in engines">
+                                ng-repeat="(key, obj) in currentData">
                                 <h3 style="text-align: center; width: 100%; font-family: monospace; padding: 0; margin: 0;">{{ obj.name }}
                                 </h3>
                                 <div style="display: flex; flex-direction: row; justify-content: space-between;">
@@ -73,13 +260,12 @@ angular.module('beamng.apps')
 
                     $scope.show_settings = false;
 
-                    $scope.displaySettings = function (state){
+                    $scope.displaySettings = function (state) {
                         $scope.show_settings = state;
                     }
 
                     $scope.resetCurrentData = function () {
-                        $scope.engines.current.torque.curve = new Array(Math.floor($scope.engines.current.maxRPM / (100-$scope.precisionFactor))).fill(0)
-                        $scope.engines.current.power.curve = new Array(Math.floor($scope.engines.current.maxRPM / (100-$scope.precisionFactor))).fill(0)
+                        $scope.vehicles[$scope.vehicleID].resetCurrent();
                     };
 
                 }],
@@ -103,114 +289,73 @@ angular.module('beamng.apps')
 
                     var _ready = false;
 
-                    scope.engines = {};
+                    scope.engines = [];
+                    scope.curves = {};
+                    scope.vehicles = {};
+                    scope.currentData = {};
                     scope.vehicleID = '';
-
-                    // Functions
-                    /**
-                     * create a default Engine object with torque and power data
-                     * @param {*} maxRPM
-                     */
-                    function generateDefaultEngineObject(maxRPM) {
-                        return {
-                            current: {
-                                name: "Dyno",
-                                maxRPM: maxRPM,
-                                rpm: 0,
-                                dashArray: [],
-                                torque: {
-                                    val: 0,
-                                    max: 0,
-                                    units: UiUnits.torque(0).unit,
-                                    curve: new Array(Math.floor(maxRPM / (100-scope.precisionFactor))).fill(0)
-                                },
-                                power: {
-                                    val: 0,
-                                    max: 0,
-                                    units: UiUnits.power(0).unit,
-                                    curve: new Array(Math.floor(maxRPM / (100-scope.precisionFactor))).fill(0)
-                                }
-                            },
-                            max: {
-                                name: "Max",
-                                maxRPM: maxRPM,
-                                dashArray: [10, 4],
-                                engineNames: [],
-                                priority: 0,
-                                torque: {
-                                    val: 0,
-                                    max: 0,
-                                    units: UiUnits.torque(0).unit,
-                                    curve: new Array(maxRPM).fill(0)
-                                },
-                                power: {
-                                    val: 0,
-                                    max: 0,
-                                    units: UiUnits.power(0).unit,
-                                    curve: new Array(maxRPM).fill(0)
-                                }
-                            }
-                        }
-                    };
 
 
                     /**
                      * Draw the maximum power and torque curve
+                     * @param {VehicleCurves} vehicle the vehicle object
                      */
-                    function plotStaticGraphs() {
-                        xFactor = (dynamicCanvas.width - plotMargins.left - plotMargins.right) / scope.engines.max.maxRPM;
+                    function plotStaticGraphs(vehicle) {
+                        xFactor = (dynamicCanvas.width - plotMargins.left - plotMargins.right) / vehicle.maxRPM;
 
                         max_ctx.clearRect(0, 0, staticCanvas.width, staticCanvas.height);
 
-                        const maxPower = Math.ceil(scope.engines.max.power.max / 250) * 250;
-                        const maxTorque = Math.ceil(scope.engines.max.torque.max / 250) * 250;
+                        const maxPower = Math.ceil(vehicle.max.power.max / 250) * 250;
+                        const maxTorque = Math.ceil(vehicle.max.torque.max / 250) * 250;
                         var powerTicks = Array(6).fill().map((x, i, a) => i * maxPower / (a.length - 1));
                         var torqueTicks = Array(6).fill().map((x, i, a) => i * maxTorque / (a.length - 1));
-                        var rpmTicks = Array(Math.floor(scope.engines.max.maxRPM / 1000) + 1).fill().map((x, i) => i * 1000);
+                        var rpmTicks = Array(Math.floor(vehicle.maxRPM / 1000) + 1).fill().map((x, i) => i * 1000);
 
                         CanvasShortcuts.plotAxis(max_ctx, 'left', [0, maxTorque], torqueTicks, plotMargins, { numLines: torqueTicks.length, color: 'darkgrey', dashArray: [2, 3] }, 'black');
                         CanvasShortcuts.plotAxis(max_ctx, 'right', [0, maxPower], powerTicks, plotMargins, null, 'red');
-                        CanvasShortcuts.plotAxis(max_ctx, 'top', [0, scope.engines.max.maxRPM], [], plotMargins, null);
-                        CanvasShortcuts.plotAxis(max_ctx, 'bottom', [0, scope.engines.max.maxRPM], rpmTicks, plotMargins, { values: rpmTicks, color: 'darkgrey', dashArray: [2, 3] }, 'black');
+                        CanvasShortcuts.plotAxis(max_ctx, 'top', [0, vehicle.maxRPM], [], plotMargins, null);
+                        CanvasShortcuts.plotAxis(max_ctx, 'bottom', [0, vehicle.maxRPM], rpmTicks, plotMargins, { values: rpmTicks, color: 'darkgrey', dashArray: [2, 3] }, 'black');
 
                         // draw static curve
-                        CanvasShortcuts.plotData(max_ctx, scope.engines.max.torque.curve.map(key => UiUnits.torque(key).val), 0, maxTorque, { margin: plotMargins, lineWidth: 2, lineColor: 'black', dashArray: scope.engines.max.dashArray });
-                        CanvasShortcuts.plotData(max_ctx, scope.engines.max.power.curve.map(key => UiUnits.power(key).val), 0, maxPower, { margin: plotMargins, lineWidth: 2, lineColor: 'red', dashArray: scope.engines.max.dashArray });
+                        CanvasShortcuts.plotData(max_ctx, vehicle.max.torque.curve.map(key => UiUnits.torque(key).val), 0, maxTorque, { margin: plotMargins, lineWidth: 2, lineColor: 'black', dashArray: vehicle.max.dashArray });
+                        CanvasShortcuts.plotData(max_ctx, vehicle.max.power.curve.map(key => UiUnits.power(key).val), 0, maxPower, { margin: plotMargins, lineWidth: 2, lineColor: 'red', dashArray: vehicle.max.dashArray });
                     }
 
 
                     /**
                      * Draw the current power and torque curve
+                     * @param {VehicleCurves} vehicle the vehicle object
                      */
-                    function plotDynamicGraphs() {
+                    function plotDynamicGraphs(vehicle) {
                         dyno_ctx.clearRect(0, 0, dynoCanvas.width, dynoCanvas.height);
 
-                        const maxPower = Math.ceil(scope.engines.max.power.max / 250) * 250;
-                        const maxTorque = Math.ceil(scope.engines.max.torque.max / 250) * 250;
+                        const maxPower = Math.ceil(vehicle.max.power.max / 250) * 250;
+                        const maxTorque = Math.ceil(vehicle.max.torque.max / 250) * 250;
                         var powerTicks = Array(6).fill().map((x, i, a) => i * maxPower / (a.length - 1));
                         var torqueTicks = Array(6).fill().map((x, i, a) => i * maxTorque / (a.length - 1));
-                        var rpmTicks = Array(Math.floor(scope.engines.max.maxRPM / 1000) + 1).fill().map((x, i) => i * 1000);
+                        var rpmTicks = Array(Math.floor(vehicle.maxRPM / 1000) + 1).fill().map((x, i) => i * 1000);
 
                         CanvasShortcuts.plotAxis(dyno_ctx, 'left', [0, maxTorque], torqueTicks, plotMargins, null);
                         CanvasShortcuts.plotAxis(dyno_ctx, 'right', [0, maxPower], powerTicks, plotMargins, null);
-                        CanvasShortcuts.plotAxis(dyno_ctx, 'top', [0, scope.engines.max.maxRPM / (100-scope.precisionFactor)], [], plotMargins, null);
-                        CanvasShortcuts.plotAxis(dyno_ctx, 'bottom', [0, scope.engines.max.maxRPM / (100-scope.precisionFactor)], rpmTicks, plotMargins, null);
+                        CanvasShortcuts.plotAxis(dyno_ctx, 'top', [0, vehicle.maxRPM / (100 - VehicleCurves.PRECISION_FACTOR)], [], plotMargins, null);
+                        CanvasShortcuts.plotAxis(dyno_ctx, 'bottom', [0, vehicle.maxRPM / (100 - VehicleCurves.PRECISION_FACTOR)], rpmTicks, plotMargins, null);
 
                         // draw dynamic curve
-                        CanvasShortcuts.plotData(dyno_ctx, scope.engines.current.torque.curve.map(key => UiUnits.torque(key).val), 0, maxTorque, { margin: plotMargins, lineWidth: 2, lineColor: 'black', dashArray: [] });
-                        CanvasShortcuts.plotData(dyno_ctx, scope.engines.current.power.curve.map(key => UiUnits.power(key).val), 0, maxPower, { margin: plotMargins, lineWidth: 2, lineColor: 'red', dashArray: [] });
+                        CanvasShortcuts.plotData(dyno_ctx, vehicle.current.torque.curve.map(key => UiUnits.torque(key).val), 0, maxTorque, { margin: plotMargins, lineWidth: 2, lineColor: 'black', dashArray: vehicle.current.dashArray });
+                        CanvasShortcuts.plotData(dyno_ctx, vehicle.current.power.curve.map(key => UiUnits.power(key).val), 0, maxPower, { margin: plotMargins, lineWidth: 2, lineColor: 'red', dashArray: vehicle.current.dashArray });
                     }
 
 
                     /**
                      * draw an orange cursor on the graph
                      * @param {*} rpm
+                     * @param {VehicleCurves} vehicle the vehicle object
                      * @returns
                      */
-                    function drawCursor(rpm) {
+                    function drawCursor(rpm, vehicle) {
                         cursor_ctx.clearRect(0, 0, dynamicCanvas.width, dynamicCanvas.height);
 
-                        if (rpm >= scope.engines.max.maxRPM) { return; }
+                        if (rpm >= vehicle.maxRPM) { return; }
 
                         var rpmX = plotMargins.left + Math.floor(rpm * xFactor);
 
@@ -234,79 +379,52 @@ angular.module('beamng.apps')
 
 
                     scope.$on('VehicleChange', () => {
+                        delete scope.vehicles[scope.vehicleID]; // remove vehicle data
+                        scope.currentData = {};
                         scope.vehicleID = '';
                     })
 
 
                     scope.$on('TorqueCurveChanged', function (_, data) {
                         if (scope.vehicleID !== data.vehicleID) {
-                            console.log("got a new vehicle"); // DEBUG
-                            // reset all torques curves
+                            console.log(`got a new vehicle, id : ${data.vehicleID}`);
                             scope.vehicleID = data.vehicleID;
-                            scope.engines = generateDefaultEngineObject(data.maxRPM);
+
+                            if(!(data.vehicleID in scope.vehicles)){
+                                scope.vehicles[data.vehicleID] = VehicleCurves.makeDefault(data.vehicleID, data.maxRPM)
+                            }
                         }
 
-                        if (!scope.engines.max.engineNames.find(engineNames => engineNames === data.deviceName)) {
-                            // creating a new dynamic engine
-                            const maxPriority = Math.max(...data.curves.map(e => e.priority));
-                            const maxPriorityCurve = data.curves.find(element => element.priority == maxPriority);
-
-                            if (scope.engines.max.priority < maxPriority) {
-                                scope.engines.max.priority = maxPriority;
-
-                                // updating max curves
-                                scope.engines.max.torque.max = Math.max.apply(Math, maxPriorityCurve.torque);
-                                scope.engines.max.torque.curve = maxPriorityCurve.torque.map(val => Math.max(val, 0));
-                                scope.engines.max.power.max = Math.max.apply(Math, maxPriorityCurve.power);
-                                scope.engines.max.power.curve = maxPriorityCurve.power.map(val => Math.max(val, 0));
-
-                                scope.engines.max.engineNames.push(data.deviceName);
+                        if(scope.vehicleID in scope.vehicles){
+                            console.debug(`add a new engine for vehicle ${scope.vehicleID}`)
+                            for(let engine of data.curves){
+                                scope.vehicles[data.vehicleID].addEngine(engine);
                             }
 
-                            plotStaticGraphs();
+                            scope.currentData = scope.vehicles[scope.vehicleID].getObject();
+                            plotStaticGraphs(scope.vehicles[scope.vehicleID]);
                         }
                     });
 
 
                     scope.graph = function () {
-                        plotStaticGraphs()
+                        plotStaticGraphs(scope.vehicles[scope.vehicleID])
                     }
 
 
                     scope.$on('streamsUpdate', function (event, streams) {
-                        if (streams.engineInfo != undefined && scope.engines.max != undefined && scope.engines.current != undefined) {
+                        if (streams.engineInfo != undefined && scope.vehicleID != '') {
                             const ENGINE_RPM_INDEX = 4;
                             const ENGINE_TORQUE_INDEX = 8;
 
-                            const _rpm = streams.engineInfo[ENGINE_RPM_INDEX] <= scope.engines.max.maxRPM ? streams.engineInfo[ENGINE_RPM_INDEX] : scope.engines.max.maxRPM;
-                            const rpmInd = Math.min(Math.floor(_rpm), scope.engines.current.maxRPM - 1);
-
-                            // update dynamic dyno data for this RPM
+                            const _rpm = streams.engineInfo[ENGINE_RPM_INDEX] <= scope.vehicles[scope.vehicleID].maxRPM ? streams.engineInfo[ENGINE_RPM_INDEX] : scope.vehicles[scope.vehicleID].maxRPM;
                             const torque = streams.engineInfo[ENGINE_TORQUE_INDEX] >= 0 ? streams.engineInfo[ENGINE_TORQUE_INDEX] : 0;
-                            const power = ((2 * Math.PI * _rpm * torque) / 60) / 736;
 
-                            // update runtime vals
-                            scope.engines.current.torque.val = torque;
-                            scope.engines.current.power.val = power;
-
-                            scope.engines.max.torque.val = scope.engines.max.torque.curve[rpmInd];
-                            scope.engines.max.power.val = scope.engines.max.power.curve[rpmInd];
-
-                            if (torque >= scope.minTorque) {
-                                // update current curve data
-                                scope.engines.current.torque.curve[Math.floor(rpmInd / (100-scope.precisionFactor))] = torque;
-                                scope.engines.current.power.curve[Math.floor(rpmInd / (100-scope.precisionFactor))] = power;
-
-                                // update max value for current curve
-                                scope.engines.current.torque.max = Math.max(scope.engines.current.torque.max, torque);
-                                scope.engines.current.power.max = Math.max(scope.engines.current.power.max, power);
-
-                            }
-
-
-                            // plotStaticGraphs();
-                            drawCursor(_rpm);
-                            plotDynamicGraphs();
+                            scope.vehicles[scope.vehicleID].updateCurrentValues(_rpm, torque);
+                            scope.currentData = scope.vehicles[scope.vehicleID].getObject();
+                            
+                            plotDynamicGraphs(scope.vehicles[scope.vehicleID]);
+                            drawCursor(_rpm, scope.vehicles[scope.vehicleID]);
                         }
                     });
 
@@ -330,7 +448,7 @@ angular.module('beamng.apps')
                             _ready = true;
                             bngApi.activeObjectLua('controller.mainController.sendTorqueData()');
                         } else {
-                            plotStaticGraphs();
+                            plotStaticGraphs(scope.vehicleID[scope.vehicleID]);
                         }
                     })
                 }
