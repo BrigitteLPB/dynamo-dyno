@@ -1,6 +1,6 @@
 {
-  "domElement": "<dynamic-dyno></dynamic-dyno>",
-  "name": "DynamicDyno",
+  "domElement": "<dynamic-dyno-black></dynamic-dyno-black>",
+  "name": "DynamicDyno [Black]",
   "types": [
     "ui.apps.categories.vehicle_info",
     "ui.apps.categories.vehicle_profiling"
@@ -16,5 +16,5 @@
   },
   "author": "BrigitteLPB",
   "version": "1.1.0",
-  "directive": "dynamicDyno"
+  "directive": "dynamicDynoBlack"
 }
