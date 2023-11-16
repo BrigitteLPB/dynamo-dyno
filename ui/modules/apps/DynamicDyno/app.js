@@ -80,9 +80,6 @@ class VehicleCurves {
      * @param {*} engine
      */
     addEngine(engine) {
-        console.debug(JSON.stringify(engine));
-        console.debug(engine.priority);
-
         if (engine.priority < this.enginePriority) {
             return;
         }
@@ -124,10 +121,8 @@ class VehicleCurves {
                 }
             });
         });
-        this.max.torque.max = max_torque;
+        this.max.torque.max = UiUnits.torque(max_torque).val;
         this.max.torque.curve = torque_curve;
-
-        console.debug(`maxTorque: ${max_torque}`);
 
         // calculate power
         var max_power = 0;
@@ -140,7 +135,7 @@ class VehicleCurves {
                 }
             });
         });
-        this.max.power.max = max_power;
+        this.max.power.max = UiUnits.power(max_power).val;
         this.max.power.curve = power_curve;
     }
 
@@ -154,14 +149,12 @@ class VehicleCurves {
         const rpmInd = Math.min(Math.floor(rpm), this.maxRPM - 1);
         const power = ((2 * Math.PI * rpm * torque) / 60) / 736;
 
-        // console.debug(`rpm: ${rpm} | torque: ${torque} | power: ${power}`);
-
         // update runtime vals
-        this.current.torque.val = torque;
-        this.current.power.val = power;
+        this.current.torque.val = UiUnits.torque(torque).val;
+        this.current.power.val = UiUnits.power(power).val;
 
-        this.max.torque.val = this.max.torque.curve[rpmInd];
-        this.max.power.val = this.max.power.curve[rpmInd];
+        this.max.torque.val = UiUnits.torque(this.max.torque.curve[rpmInd]).val;
+        this.max.power.val = UiUnits.power(this.max.power.curve[rpmInd]).val;
 
         if (torque >= VehicleCurves.MIN_TORQUE) {
             // update current curve data
@@ -170,8 +163,8 @@ class VehicleCurves {
             this.current.power.curve[currentIndex] = power;
 
             // update max value for current curve
-            this.current.torque.max = Math.max(this.current.torque.max, torque);
-            this.current.power.max = Math.max(this.current.power.max, power);
+            this.current.torque.max = UiUnits.torque(Math.max(this.current.torque.max, torque)).val
+            this.current.power.max = UiUnits.torque(Math.max(this.current.power.max, power)).val;
         }
     }
 
@@ -274,6 +267,7 @@ angular.module('beamng.apps')
                     scope.currentData = {};
                     scope.vehicleID = '';
 
+                    VALUE_INTERVAL = 50
 
                     /**
                      * Draw the maximum power and torque curve
@@ -284,10 +278,10 @@ angular.module('beamng.apps')
 
                         max_ctx.clearRect(0, 0, staticCanvas.width, staticCanvas.height);
 
-                        const maxPower = Math.ceil(vehicle.max.power.max / 250) * 250;
-                        const maxTorque = Math.ceil(vehicle.max.torque.max / 250) * 250;
-                        var powerTicks = Array(6).fill().map((x, i, a) => i * maxPower / (a.length - 1));
+                        const maxTorque = Math.ceil(vehicle.max.torque.max / VALUE_INTERVAL) * VALUE_INTERVAL;
+                        const maxPower = Math.ceil(vehicle.max.power.max / VALUE_INTERVAL) * VALUE_INTERVAL;
                         var torqueTicks = Array(6).fill().map((x, i, a) => i * maxTorque / (a.length - 1));
+                        var powerTicks = Array(6).fill().map((x, i, a) => i * maxPower / (a.length - 1));
                         var rpmTicks = Array(Math.floor(vehicle.maxRPM / 1000) + 1).fill().map((x, i) => i * 1000);
 
                         CanvasShortcuts.plotAxis(max_ctx, 'left', [0, maxTorque], torqueTicks, plotMargins, { numLines: torqueTicks.length, color: 'darkgrey', dashArray: [2, 3] }, 'black');
@@ -308,14 +302,14 @@ angular.module('beamng.apps')
                     function plotDynamicGraphs(vehicle) {
                         dyno_ctx.clearRect(0, 0, dynoCanvas.width, dynoCanvas.height);
 
-                        const maxPower = Math.ceil(vehicle.max.power.max / 250) * 250;
-                        const maxTorque = Math.ceil(vehicle.max.torque.max / 250) * 250;
-                        var powerTicks = Array(6).fill().map((x, i, a) => i * maxPower / (a.length - 1));
+                        const maxTorque = Math.ceil(vehicle.max.torque.max / VALUE_INTERVAL) * VALUE_INTERVAL;
+                        const maxPower = Math.ceil(vehicle.max.power.max / VALUE_INTERVAL) * VALUE_INTERVAL;
                         var torqueTicks = Array(6).fill().map((x, i, a) => i * maxTorque / (a.length - 1));
+                        var powerTicks = Array(6).fill().map((x, i, a) => i * maxPower / (a.length - 1));
                         var rpmTicks = Array(Math.floor(vehicle.maxRPM / 1000) + 1).fill().map((x, i) => i * 1000);
 
                         CanvasShortcuts.plotAxis(dyno_ctx, 'left', [0, maxTorque], torqueTicks, plotMargins, null);
-                        CanvasShortcuts.plotAxis(dyno_ctx, 'right', [0, maxPower], powerTicks, plotMargins, null);
+                        CanvasShortcuts.plotAxis(dyno_ctx, 'right', [0, maxPower], powerTicks, plotMargins, null, 'red' );
                         CanvasShortcuts.plotAxis(dyno_ctx, 'top', [0, vehicle.maxRPM / (100 - VehicleCurves.PRECISION_FACTOR)], [], plotMargins, null);
                         CanvasShortcuts.plotAxis(dyno_ctx, 'bottom', [0, vehicle.maxRPM / (100 - VehicleCurves.PRECISION_FACTOR)], rpmTicks, plotMargins, null);
 
