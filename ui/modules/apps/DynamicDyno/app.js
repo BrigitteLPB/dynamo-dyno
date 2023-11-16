@@ -475,7 +475,7 @@ angular.module('beamng.apps')
                             _ready = true;
                             bngApi.activeObjectLua('controller.mainController.sendTorqueData()');
                         } else {
-                            scope.drawBoard.plotStaticGraphs(scope.vehicleID[scope.vehicleID]);
+                            scope.drawBoard.plotStaticGraphs(scope.vehicles[scope.vehicleID]);
                         }
                     })
                 }

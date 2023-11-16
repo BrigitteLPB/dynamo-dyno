@@ -1,6 +1,6 @@
 {
   "domElement": "<dynamic-dyno></dynamic-dyno>",
-  "name": "ui.apps.dynamicdyno.name",
+  "name": "DynamicDyno",
   "types": [
     "ui.apps.categories.vehicle_info",
     "ui.apps.categories.vehicle_profiling"
