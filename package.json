@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "sass-to-css": "sass -w ui/modules/apps/DynamicDyno/app.scss:ui/modules/apps/DynamicDyno/app.css --no-source-map"
+  },
+  "devDependencies": {
+    "sass": "^1.71.1"
+  }
+}
